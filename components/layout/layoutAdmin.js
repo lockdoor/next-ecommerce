@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import AdminMenu from "../nav/adminMenu";
-import Jumbotron from "../jumbotron";
+import Jumbotron from "../card/jumbotron";
 import {MenuUnfoldOutlined} from "@ant-design/icons"
 
 export default function LayoutAdmin({ children, headText, page }) {

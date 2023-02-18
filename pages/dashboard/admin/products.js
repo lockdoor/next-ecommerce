@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export default function CreateCategory() {
   // hook
-  const { isLoading, isError, data, error } = useQuery("list", list);
+  const { isLoading, isError, data, error } = useQuery("listProduct", list);
   if (isLoading) return <div>Product is Loading</div>;
   if (isError) return <div>Has error {error}</div>;
   return (
@@ -17,12 +17,12 @@ export default function CreateCategory() {
       <LayoutAdmin headText={"Products"} page="products">
         <div className="flex flex-col xl:grid xl:grid-cols-2 gap-2">
           {data.map((p) => (
-            <Link key={p._id} href={`/admin/productUpdate/${p.slug}`}>
+            <Link key={p._id} href={`/dashboard/admin/productUpdate/${p.slug}`}>
             <div className="border rounded-md h-72 flex">
               <div className="flex items-center">
               <Image
-                loader={() => `/api/product/photo/${p._id}?w=${200}&q=${75}?t=${new Date().getTime()}`}
-                src={`/api/product/photo/${p._id}`}
+                // loader={() => `/api/product/photo/${p._id}?w=${200}&q=${75}?t=${new Date().getTime()}`}
+                src={`/api/product/photo/${p._id}?t=${new Date().getTime()}`}
                 alt={p.name}
                 width={200}
                 height={200}

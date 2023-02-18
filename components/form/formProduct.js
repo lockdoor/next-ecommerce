@@ -19,7 +19,7 @@ export default function FormProduct({
     <form onSubmit={handleSubmit}>
       {/* photo preview */}
       {formData?.photo ? (
-        <img
+        <Image
           className="block mx-auto"
           height={200}
           width={200}
@@ -28,11 +28,11 @@ export default function FormProduct({
         />
       ) : (
         formData?._id && (
-          <img
+          <Image
             className=" block mx-auto"
             height={200}
             width={200}
-            src={`../../api/product/photo/${formData._id}`}
+            src={`/api/product/photo/${formData._id}?q=${new Date().getTime()}`}
             alt="Product"
           />
         )

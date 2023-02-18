@@ -8,7 +8,7 @@ export default function AdminMenu({ page }) {
       <ul>
         <li>
           <Link
-            href={"/admin/createCategory"}
+            href={"/dashboard/admin/createCategory"}
             className={`${
               page === "createCategory"
                 ? "admin-menu-item-active"
@@ -20,7 +20,7 @@ export default function AdminMenu({ page }) {
         </li>
         <li>
           <Link
-            href={"/admin/createProduct"}
+            href={"/dashboard/admin/createProduct"}
             className={`${
               page === "createProduct"
                 ? "admin-menu-item-active"
@@ -32,7 +32,7 @@ export default function AdminMenu({ page }) {
         </li>
         <li>
           <Link
-            href={"/admin/products"}
+            href={"/dashboard/admin/products"}
             className={`${
               page === "products"
                 ? "admin-menu-item-active"

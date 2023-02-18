@@ -30,7 +30,7 @@ export default function CreateProduct() {
       toast.error(response.error)
     }else{
       setFormData({})
-      router.push('/admin/products')
+      router.push('/dashboard/admin/products')
     }
   }
 

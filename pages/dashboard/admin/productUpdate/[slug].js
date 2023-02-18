@@ -53,7 +53,7 @@ export default function ProductUpdate({ slug }) {
       } else {
         setFormData({});
         toast.success("update success");
-        router.push("/admin/products");
+        router.push("/dashboard/admin/products");
       }
     } catch (err) {
       console.log(err);
@@ -70,7 +70,7 @@ export default function ProductUpdate({ slug }) {
       } else {
         setFormData({});
         toast.success(`delete ${response.name} success`);
-        router.push("/admin/products");
+        router.push("/dashboard/admin/products");
       }
     } catch (err) {
       console.log(err);

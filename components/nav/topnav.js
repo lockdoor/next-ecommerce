@@ -9,6 +9,7 @@ import useOutsideAlerter from "@/libs/detectOutside";
 export default function TopNav({ page }) {
   // hook
   const { data } = useSession();
+
   const router = useRouter();
 
   const refMenuUser = useRef(null);
@@ -16,9 +17,9 @@ export default function TopNav({ page }) {
   //state
   const [toggleMenuUser, setToggleMenuUser] = useState(false);
 
-  const logout = () => {
-    signOut({ redirect: false });
-    router.push("/login");
+  const logout = async() => {
+    await signOut({ redirect: false });
+    router.replace("/auth/login");
   };
 
   const handleToggleMenuUser = () => {
@@ -38,19 +39,19 @@ export default function TopNav({ page }) {
           <Link href={"/"}>HOME</Link>
         </li>
         <li>
-          {data?.token.name ? (
+          { data?.token.name ? (
             <>
               <span
                 className="flex items-center cursor-pointer "
                 onClick={handleToggleMenuUser}
               >
-                <span>Hi {data.token.name}</span>
+                <span>Hi { data.token?.name}</span>
                 <UserOutlined />
               </span>
               {toggleMenuUser && (
                 <ul ref={refMenuUser} className="top-nav-dropdown">
                   <li className="top-nav-dropdown-item">
-                    <Link href={"/admin/dashboard"}>Dashboard</Link>
+                    <Link href={`/dashboard/${data.token?.role === 1 ? 'admin' : 'user'}`}>Dashboard</Link>
                   </li>
                   <li onClick={logout} className="top-nav-dropdown-item">
                     Logout
@@ -69,10 +70,10 @@ export default function TopNav({ page }) {
               {toggleMenuUser && (
                 <ul ref={refMenuUser} className="top-nav-dropdown">
                   <li className="top-nav-dropdown-item">
-                    <Link href={"/login"}>LOGIN</Link>
+                    <Link href={"/auth/login"}>LOGIN</Link>
                   </li>
                   <li className="top-nav-dropdown-item">
-                    <Link href={"/register"}>REGISTER</Link>
+                    <Link href={"/auth/register"}>REGISTER</Link>
                   </li>
                 </ul>
               )}
