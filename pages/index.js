@@ -18,17 +18,17 @@ export default function Home() {
     <LayoutMain page={"home"}>
       <Jumbotron title={"HOME PAGE"} subTitle={"Wellcome to my shop"} />
       <div className="sm:flex">
-        <div className="sm:w-1/2 pl-2 pr-1">
+        <div className="sm:w-1/2 pl-2 pr-2">
           <div className="text-center my-3 p-3 bg-slate-200 text-2xl">New Arrivals</div>
-          <div className="lg:grid lg:grid-cols-2 gap-2">
+          <div className="lg:grid lg:grid-cols-2 gap-4">
             {data.map(p => (
               <CardProduct key={p._id} p={p}/>
             ))}
           </div>
         </div>
-        <div className="sm:w-1/2 pl-1 pr-2">
+        <div className="sm:w-1/2 pl-2 pr-2">
           <div className="text-center my-3 p-3 bg-slate-200 text-2xl">Best Sellers</div>
-          <div className="lg:grid lg:grid-cols-2 gap-2">
+          <div className="lg:grid lg:grid-cols-2 gap-4">
             {dataSortBySold.map(p => (
               <CardProduct key={p._id} p={p}/>
             ))}

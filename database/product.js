@@ -67,14 +67,60 @@ export const list = async (req, res) => {
   }
 };
 
+export const listFilter = async (req, res) => {
+  try {
+    const { categories, from, to } = req.query;
+    const categoriesArr = categories.split(",");
+    // console.log(categoriesArr.length, categoriesArr);
+    const filters = [];
+    if (categories) filters.push({ $in: ["$category.slug", categoriesArr] });
+    if (isFinite(parseInt(from)))
+      filters.push({ $gte: ["$price", parseInt(from)] });
+    if (isFinite(parseInt(to)))
+      filters.push({ $lte: ["$price", parseInt(to)] });
+
+    const result = await Product.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      { $unwind: "$category" },
+      {
+        $match: {
+          $expr: {
+            $and: filters,
+          },
+        },
+      },
+      {
+        $project: {
+          photo: 0,
+        },
+      },
+    ]);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: "Somethings wrong by catch!" });
+    console.log(err);
+  }
+};
+
 export const photo = async (req, res) => {
   try {
     const { productId } = req.query;
     // console.log(productId)
-    if (!productId || !validator.isMongoId(productId))
-      return res.json({ error: "file not found" });
+    // if (!productId || !validator.isMongoId(productId))
+    //   return res.json({ error: "file not found" });
+
+    const filter = validator.isMongoId(productId)
+      ? ({_id: productId})
+      : ({slug: productId})
     await connectDB();
-    const photo = await Product.findById(productId).select("photo");
+    const photo = await Product.findOne(filter).select("photo");
     if (photo?.photo.data) {
       res.setHeader("Content-Type", photo.photo.contentType);
       res.send(photo.photo.data);
@@ -83,7 +129,7 @@ export const photo = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(400).json(err.message);
+    res.json('error from catch photo');
   }
 };
 
@@ -169,5 +215,34 @@ export const read = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).json(err.message);
+  }
+};
+
+export const searchCount = async (req, res) => {
+  try {
+    console.log(req.query)
+    const {keyword} = req.query
+    const total = await Product.find({$or: [
+      {name: {$regex: keyword, $options: 'i'}},
+      {description: {$regex: keyword, $options: 'i'}},
+    ]}).count()
+    res.send(total);
+  } catch (err) {
+    console.log(err);
+    res.json(err.message);
+  }
+};
+
+export const search = async (req, res) => {
+  try {
+    const {keyword} = req.query
+    const product = await Product.find({$or: [
+      {name: {$regex: keyword, $options: 'i'}},
+      {description: {$regex: keyword, $options: 'i'}},
+    ]}).select('-photo')
+    res.send(product);
+  } catch (err) {
+    console.log(err);
+    res.json(err.message);
   }
 };
