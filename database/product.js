@@ -67,6 +67,36 @@ export const list = async (req, res) => {
   }
 };
 
+export const page = async (req, res) => {
+  try {
+    const { page, perPage, sort } = req.query;
+    const sortBy = {};
+    sortBy[sort] = -1;
+    await connectDB();
+    const products = await Product.find({})
+      .select("-photo")
+      .skip((page - 1) * perPage)
+      .populate({ path: "category" })
+      .limit(perPage)
+      .sort(sortBy);
+    res.json(products);
+  } catch (err) {
+    console.log(err);
+    res.json(err.message);
+  }
+};
+
+export const total = async (req, res) => {
+  try {
+    await connectDB();
+    const total = await Product.find({}).count();
+    res.send(total);
+  } catch (err) {
+    console.log(err);
+    res.json(err.message);
+  }
+};
+
 export const listFilter = async (req, res) => {
   try {
     const { categories, from, to } = req.query;
@@ -117,8 +147,8 @@ export const photo = async (req, res) => {
     //   return res.json({ error: "file not found" });
 
     const filter = validator.isMongoId(productId)
-      ? ({_id: productId})
-      : ({slug: productId})
+      ? { _id: productId }
+      : { slug: productId };
     await connectDB();
     const photo = await Product.findOne(filter).select("photo");
     if (photo?.photo.data) {
@@ -129,7 +159,7 @@ export const photo = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.json('error from catch photo');
+    res.json("error from catch photo");
   }
 };
 
@@ -190,10 +220,10 @@ export const remove = async (req, res) => {
   try {
     const { productId } = req.query;
     const filter = validator.isMongoId(productId)
-    ? { _id: productId }
-    : { slug: productId };
+      ? { _id: productId }
+      : { slug: productId };
     await connectDB();
-    const product = await Product.findOneAndRemove(filter).select('-photo')
+    const product = await Product.findOneAndRemove(filter).select("-photo");
     res.status(201).json(product);
   } catch (err) {
     console.log(err);
@@ -214,18 +244,20 @@ export const read = async (req, res) => {
     res.json(product);
   } catch (err) {
     console.log(err);
-    res.status(400).json(err.message);
+    res.json(err.message);
   }
 };
 
 export const searchCount = async (req, res) => {
   try {
-    console.log(req.query)
-    const {keyword} = req.query
-    const total = await Product.find({$or: [
-      {name: {$regex: keyword, $options: 'i'}},
-      {description: {$regex: keyword, $options: 'i'}},
-    ]}).count()
+    console.log(req.query);
+    const { keyword } = req.query;
+    const total = await Product.find({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+      ],
+    }).count();
     res.send(total);
   } catch (err) {
     console.log(err);
@@ -235,14 +267,37 @@ export const searchCount = async (req, res) => {
 
 export const search = async (req, res) => {
   try {
-    const {keyword} = req.query
-    const product = await Product.find({$or: [
-      {name: {$regex: keyword, $options: 'i'}},
-      {description: {$regex: keyword, $options: 'i'}},
-    ]}).select('-photo')
+    const { keyword } = req.query;
+    const product = await Product.find({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+      ],
+    }).select("-photo");
     res.send(product);
   } catch (err) {
     console.log(err);
     res.json(err.message);
+  }
+};
+
+export const listByCategory = async (req, res) => {
+  try {
+    const {slug} = req.query
+    const products = await Product.aggregate([
+      {$lookup: {
+        from: 'categories',
+        localField: 'category',
+        foreignField: '_id',
+        as: 'category'
+      }},
+      {$unwind: '$category'},
+      {$match: {$expr: {$eq: ['$category.slug', slug]}}},
+      {$project: {photo: 0}}
+    ])
+    res.json(products)
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err.message);
   }
 };

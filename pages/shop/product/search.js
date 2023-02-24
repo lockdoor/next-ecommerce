@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Jumbotron from "@/components/card/jumbotron";
 import LayoutMain from "@/components/layout/layoutMain";
 import { useQuery } from "react-query";
@@ -6,14 +6,9 @@ import { search } from "@/libs/clientRequest/product";
 import CardProduct from "@/components/card/cardProduct";
 
 export default function Search({ keyword }) {
-  const {
-    data: products,
-    refetch,
-    isLoading,
-  } = useQuery("search", () => search(keyword));
-  useEffect(() => {
-    refetch();
-  }, [keyword]);
+  const { data: products, isLoading } = useQuery(["search", keyword], () =>
+    search(keyword)
+  );
   if (isLoading) return <div>Product is Loading</div>;
   return (
     <LayoutMain>
@@ -23,7 +18,7 @@ export default function Search({ keyword }) {
       />
       <div className="sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-3 ">
         {products.map((p) => (
-          <CardProduct p={p} />
+          <CardProduct p={p} key={p._id} />
         ))}
       </div>
     </LayoutMain>

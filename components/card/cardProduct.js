@@ -16,7 +16,7 @@ export default function CardProduct({ p }) {
         >
           <Badge.Ribbon text={`Sold ${p.sold}`} color="green">
             <Image
-              src={`/api/product/photo/${p._id}`}
+              src={`/api/product/photo/${p.slug}`}
               className="mx-auto"
               width={200}
               height={200}

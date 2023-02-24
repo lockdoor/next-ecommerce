@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import LayoutMain from "@/components/layout/layoutMain";
 import LayoutAdmin from "@/components/layout/layoutAdmin";
 import FormProduct from "@/components/form/formProduct";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { update, remove } from "@/libs/clientRequest/product";
+import { update, remove, read } from "@/libs/clientRequest/product";
 import { useRouter } from "next/router";
+import { useQuery } from "react-query";
 
 export default function ProductUpdate({ slug }) {
   const [formData, setFormData] = useState({});
 
   const router = useRouter();
-  const loadProduct = async () => {
-    try {
-      const { data } = await axios.get(`/api/product/${slug}`);
-      if (data?.error) {
+  const {isLoading} = useQuery('readProduct', ()=>read(slug), {
+    onSuccess: (data) => {
+      if(data?.error){
         toast.error(data.error);
-      } else {
-        // console.log(data)
+      }else{
         const form = {
           name: data?.name,
           description: data?.description,
@@ -30,11 +29,8 @@ export default function ProductUpdate({ slug }) {
         };
         setFormData({ ...form });
       }
-    } catch (err) {
-      console.log(err);
-      toast.error("load product failed, try again");
     }
-  };
+  })
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -78,9 +74,8 @@ export default function ProductUpdate({ slug }) {
     }
   };
 
-  useEffect(() => {
-    loadProduct();
-  }, []);
+  if(isLoading) return <div>Product is Loading ...</div>
+
   return (
     <LayoutMain>
       <LayoutAdmin headText={"Update Product"}>

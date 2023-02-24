@@ -19,7 +19,7 @@ export default function FormSearch() {
       if (!response) {
         toast.error("Product not found");
       } else {
-        router.replace(`/shop/product/search?keyword=${search}`);
+        router.push(`/shop/product/search?keyword=${search}`);
       }
     }
   };
@@ -30,7 +30,7 @@ export default function FormSearch() {
       <input
         type={"search"}
         placeholder="search"
-        className="pl-2 text-md outline-none"
+        className="flex-1 pl-2 text-md outline-none"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         onKeyUp={handleChange}

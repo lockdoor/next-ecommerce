@@ -39,3 +39,24 @@ export const search = async (keyword) => {
   const {data} = await axios.get(`/api/product/search?keyword=${keyword}`)
   return data
 }
+
+export const read = async (slug) => {
+  const {data} = await axios.get(`/api/product/${slug}`)
+  return data
+}
+
+export const total = async() => {
+  const {data} = await axios.get(`/api/product/total`)
+  return data
+}
+
+export const listpage = async(page, perPage, sort) => {
+  const {data} = await axios.get(`/api/product/page?page=${page}&perPage=${perPage}&sort=${sort}`)
+  return data
+}
+
+export const listByCategory = async (slug) => {
+  const {data} = await axios.get(`/api/product/category?slug=${slug}`)
+  return data
+}
+

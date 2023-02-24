@@ -8,7 +8,8 @@ export default function useOutsideAlerter(ref, setState) {
     function handleClickOutside(event) {
       if (ref.current && !ref.current.contains(event.target)) {
         // alert("You clicked outside of me!");
-        setState(false)
+        setTimeout(()=>{setState(false)}, 100)
+        // setState(false)
       }
     }
     // Bind the event listener
