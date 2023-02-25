@@ -19,8 +19,8 @@ export default function CategoryAll() {
       <Jumbotron title="Category" subTitle="Please choose Category" />
       <div className="px-3 mt-3 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {data?.map((c) => (
-          <Link href={`/category/${c.slug}`}>
-            <div key={c._id} className="bg-cyan-300 my-3 sm:my-0 rounded-md p-3 cursor-pointer hover:bg-cyan-500 hover:text-white hover:font-bold shadow-md">{c.name}</div>
+          <Link key={c._id} href={`/category/${c.slug}`}>
+            <div  className="bg-cyan-300 my-3 sm:my-0 rounded-md p-3 cursor-pointer hover:bg-cyan-500 hover:text-white hover:font-bold shadow-md">{c.name}</div>
           </Link>
           
         ))}

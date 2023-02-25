@@ -30,7 +30,7 @@ export default function FormSearch() {
       <input
         type={"search"}
         placeholder="search"
-        className="flex-1 pl-2 text-md outline-none"
+        className="flex-1 pl-2 text-md outline-none w-36 sm:w-52"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         onKeyUp={handleChange}

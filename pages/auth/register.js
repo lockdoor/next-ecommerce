@@ -3,6 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import LayoutMain from "@/components/layout/layoutMain";
 import Jumbotron from "@/components/card/jumbotron";
+import Link from "next/link";
 export default function Home() {
   // hook
   const router = useRouter();
@@ -17,8 +18,8 @@ export default function Home() {
   const submitHandler = async (e) => {
     e.preventDefault();
     await axios
-      .post(`/api/register`, { name, email, password })
-      .then(() => router.replace("/login"))
+      .post(`/api/auth/register`, { name, email, password })
+      .then(() => router.replace("/auth/login"))
       .catch((err) => setErrorMessage(err.response.data.error));
   };
   return (
@@ -58,9 +59,15 @@ export default function Home() {
               onChange={(e) => setPassword(e.target.value)}
             />
             <button type="submit" className="btn-submit">
-              LOGIN
+              REGISTER
             </button>
           </form>
+          <p className="text-center">
+            If you have an account please{" "}
+            <Link href={"/auth/login"} className="text-blue-400">
+              Login
+            </Link>
+          </p>
         </div>
       </main>
     </LayoutMain>

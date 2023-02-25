@@ -5,6 +5,7 @@ import FormSearch from "../form/formSearch";
 import CategoriesMenuDropdown from "./categoriesMenuDropdown";
 import UserMenuDropdown from "./userMenuDropdown";
 import MainMenuDropdown from "./mainMenuDropdown"
+import Cart from "./cart";
 
 
 export default function TopNav({ page }) {
@@ -13,30 +14,35 @@ export default function TopNav({ page }) {
 
   return (
     <div className=" z-10  sticky top-0 bg-slate-50 shadow-md  py-3 px-5 text-2xl">
-      <ul className=" flex justify-between  ">
+      <ul className=" flex justify-between items-center ">
 
-        <li className="sm:hidden cursor-pointer">
+        <li className="md:hidden cursor-pointer">
           <MainMenuDropdown />
         </li>
 
         {/* item1 */}
-        <li className={`hidden sm:block order-1 ${page === 'home' && 'nav-active'} `} >
+        <li className={`hidden md:block order-1 ${page === 'home' && 'nav-active'} `} >
           <Link href={"/"}>HOME</Link>
         </li>
 
         {/* item2 */}
-        <li className={`hidden sm:block order-2 ${page === 'shop' && 'nav-active'} `}>
+        <li className={`hidden md:block order-2 ${page === 'shop' && 'nav-active'} `}>
           <Link href={"/shop"}>SHOP</Link>
         </li>
 
         {/* item3 */}
-        <li className={`hidden sm:block order-3 ${page === 'category' && 'nav-active'} `}>
+        <li className={`hidden md:block order-3 ${page === 'category' && 'nav-active'} `}>
           <CategoriesMenuDropdown />
         </li>
 
         {/* item4 */}
         <li className="order-4 ">
           <FormSearch />
+        </li>
+
+        {/* item5 */}
+        <li className="order-5 ">
+          <Cart />
         </li>
         
         {/* item last */}

@@ -1,5 +1,6 @@
 import React from "react";
 import Product from "@/models/product";
+// import Category from "@/models/category";
 import connectDB from "@/database/connectDB";
 import Image from "next/image";
 import LayoutMain from "@/components/layout/layoutMain";
@@ -7,6 +8,7 @@ import Jumbotron from "@/components/card/jumbotron";
 import { Badge } from "antd";
 import CardProduct from "@/components/card/cardProduct";
 import moment from "moment";
+import AddToCartBtn from "@/components/card/addToCartBtn";
 import {
   FaDollarSign,
   FaProjectDiagram,
@@ -100,10 +102,8 @@ export default function ProductView(props) {
 
             <div className="m-2">{product.description}</div>
 
-            <div>
-              <button className="w-full bg-green-400 py-1 hover:bg-green-600 hover:text-white rounded-br-md">
-                Add to Cart
-              </button>
+            <div className="rounded-b-md overflow-hidden">
+              <AddToCartBtn p={product}/>
             </div>
           </div>
         </div>

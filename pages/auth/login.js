@@ -4,6 +4,7 @@ import Jumbotron from "@/components/card/jumbotron";
 import { getToken } from "next-auth/jwt";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Login() {
   // state
@@ -61,6 +62,12 @@ export default function Login() {
               LOGIN
             </button>
           </form>
+          <p className="text-center">
+            If you not have an account please{" "}
+            <Link href={"/auth/register"} className="text-blue-400">
+              Register
+            </Link>
+          </p>
         </div>
       </main>
     </LayoutMain>
