@@ -3,8 +3,15 @@ import LayoutMain from "@/components/layout/layoutMain";
 import LayoutUser from "@/components/layout/layoutUser";
 import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
+import { signIn } from "next-auth/react";
+import { changeName, changePassword } from "@/libs/clientRequest/user";
+import { useRouter } from "next/router";
+import { signOut } from "next-auth/react";
 
-export default function Profile() {
+export default function SettingProfile() {
+
+  const router = useRouter()
+
   const [name, setName] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [password, setPassword] = useState("");
@@ -15,19 +22,33 @@ export default function Profile() {
   const { data } = useSession();
 
   // function
-  const handleNameSubmit = (e) => {
+  const handleNameSubmit = async(e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      toast.error("Password and confirm password not match");
+    if (name === data?.token.name) return;
+    const response = await changeName(data?.token._id, name)
+    if(response){
+      await signIn('jwt', {redirect: false})
+    }else{
+      toast.error('Sometings Wrong')
     }
   };
 
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async(e) => {
     e.preventDefault();
-    if (name === data?.token.name) return;
-    // if (password !== confirmPassword) {
-    //   toast.error("Password and confirm password not match");
-    // }
+    
+    if (password !== confirmPassword) {
+      toast.error("Password and confirm password not match");
+      return
+    }
+
+    const response = await changePassword(data?.token._id, oldPassword, password)
+    if(response?.error){
+      toast.error(response.error)
+    }else{
+      toast.success('change password success please login again')
+      await signOut({redirect: false})
+      router.push('/auth/login')
+    }
   };
 
   const handleShowFormName = () => {
@@ -51,7 +72,7 @@ export default function Profile() {
   }, [data?.token]);
   return (
     <LayoutMain>
-      <LayoutUser headText={"Setting Profile"} page={"userProfile"}>
+      <LayoutUser headText={"Setting Profile"} page={"settingProfile"}>
         <main>
           {/* btn select form */}
           <div className="flex justify-around">

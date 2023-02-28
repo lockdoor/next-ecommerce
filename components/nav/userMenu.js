@@ -7,26 +7,26 @@ export default function UserMenu({ page }) {
       <div className="header-menu">User Menu</div>
       <ul>
         <Link
-          href={"/dashboard/user/profile"}
+          href={"/dashboard/user/settingProfile"}
           className={`${
-            page === "userProfile"
+            page === "settingProfile"
               ? "admin-menu-item-active"
               : "admin-menu-item "
           }`}
         >
-          <li>User Profile</li>
+          <li>Setting Profile</li>
         </Link>
 
-        {/* <Link
-          href={"/dashboard/admin/createProduct"}
+        <Link
+          href={"/dashboard/user/settingAddress"}
           className={`${
-            page === "createProduct"
+            page === "settingAddress"
               ? "admin-menu-item-active"
               : "admin-menu-item "
           }`}
         >
-          <li>Create Product</li>
-        </Link> */}
+          <li>Setting Address</li>
+        </Link>
 
         {/* <Link
           href={"/dashboard/admin/products"}

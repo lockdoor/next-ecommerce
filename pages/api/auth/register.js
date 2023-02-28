@@ -5,15 +5,15 @@ import User from "@/models/user"
 
 export default async function handler(req, res){
   if(req.method !== 'POST'){
-    return res.status(400).json({error: `${req.method} not allow`})
+    return res.json({error: `${req.method} not allow`})
   }
   const {name, email, password} = req.body
   try{
     if(!name || validator.isEmpty(name)){
-      return res.status(400).json({error: 'name is required'})
+      return res.json({error: 'name is required'})
     }
     if(!email || !validator.isEmail(email)){
-      return res.status(400).json({error: 'email is required'})
+      return res.json({error: 'email is required'})
     }
     if(!password || !validator.isStrongPassword(password, {
       minUppercase: 0,
@@ -21,12 +21,12 @@ export default async function handler(req, res){
       minNumbers: 0,
       minSymbols: 0
     })){
-      return res.status(400).json({error: 'password is required'})
+      return res.json({error: 'password is required'})
     }
     await connectDB()
     const existingUser = await User.findOne({email})
     if(existingUser){
-      return res.status(400).json({error: 'email is existed'})
+      return res.json({error: 'email is existed'})
     }
     const passwordHass = await bcrypt.hash(password, 8)
     const user = await User.create({name, email, password: passwordHass})
@@ -34,7 +34,7 @@ export default async function handler(req, res){
   }
   catch(err){
     console.log(err)
-    return res.status(400).send(err)
+    return res.send(err)
   }
   
 }

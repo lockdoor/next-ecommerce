@@ -9,9 +9,9 @@ export default function Home() {
   const router = useRouter();
 
   // state
-  const [name, setName] = useState("lockdoor");
-  const [email, setEmail] = useState("lockdoor@gmail.com");
-  const [password, setPassword] = useState("12345678");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   // function
@@ -19,7 +19,13 @@ export default function Home() {
     e.preventDefault();
     await axios
       .post(`/api/auth/register`, { name, email, password })
-      .then(() => router.replace("/auth/login"))
+      .then((response) => {
+        if(response.data?.error){
+          setErrorMessage(response.data.error)
+        }else{
+          router.replace("/auth/login")
+        }
+      }) 
       .catch((err) => setErrorMessage(err.response.data.error));
   };
   return (
@@ -38,6 +44,7 @@ export default function Home() {
               <div className="form-error-message">{errorMessage}</div>
             )}
             <input
+              id="name"
               className="input-text"
               type={"text"}
               placeholder="Name"
@@ -45,6 +52,7 @@ export default function Home() {
               onChange={(e) => setName(e.target.value)}
             />
             <input
+              id="email"
               className="input-text"
               type={"text"}
               placeholder="Email Address"
@@ -52,13 +60,14 @@ export default function Home() {
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
+              id="password"
               className="input-text"
               type={"password"}
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <button type="submit" className="btn-submit">
+            <button type="submit" id="btnSubmit" className="btn-submit">
               REGISTER
             </button>
           </form>

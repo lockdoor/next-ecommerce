@@ -51,6 +51,7 @@ const Form = ({
   return (
     <form className="flex gap-2 items-center" onSubmit={handleSubmit}>
       <input
+        id="category"
         type="text"
         placeholder="Write Category Name ..."
         className="inline-block flex-1 border border-gray-400 outline-slate-900 py-2 rounded-lg px-2"
@@ -58,6 +59,7 @@ const Form = ({
         onChange={(e) => setName(e.target.value)}
       />
       <button
+        id="btnSubmit"
         type="Submit"
         className="bg-slate-600 text-white px-10 py-2 rounded-lg hover:text-xl"
       >

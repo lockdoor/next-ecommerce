@@ -4,6 +4,33 @@ import connectDB from "@/database/connectDB";
 import User from "@/models/user";
 import bcrypt from "bcrypt";
 
+async function refreshAccessToken(token) {
+  try {
+    const {_id} = token
+    const user = await User.findById(_id)
+
+    if (!user) {
+      // throw refreshedTokens
+      return null
+    }
+
+    return {
+      ...token,
+      name: user.name,
+      // accessToken: refreshedTokens.access_token,
+      // accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+      // refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+    }
+  } catch (error) {
+    console.log(error)
+
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    }
+  }
+}
+
 
 export const authOptions = {
   providers: [
@@ -28,7 +55,7 @@ export const authOptions = {
     }),
   ],
   pages: {
-    signIn: "/login",
+    signIn: "/auth/login",
   },
   callbacks: {
     async session(session) {
@@ -39,8 +66,10 @@ export const authOptions = {
       if(user) {
         token._id = user._id
         token.role = user.role
+        return token
       }
-      return token;
+      
+      return refreshAccessToken(token);
     },
   },
   jwt: {

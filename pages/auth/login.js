@@ -45,6 +45,7 @@ export default function Login() {
               <div className="form-error-message">{errorMessage}</div>
             )}
             <input
+              id="email"
               className="input-text"
               type={"text"}
               placeholder="Email Address"
@@ -52,13 +53,14 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
+              id="password"
               className="input-text"
               type={"password"}
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <button type="submit" className="btn-submit">
+            <button type="submit" id="btnSubmit" className="btn-submit">
               LOGIN
             </button>
           </form>

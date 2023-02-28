@@ -16,7 +16,7 @@ export default function FormProduct({
   if (isError) return <div>Has error {error}</div>;
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} id="productForm">
       {/* photo preview */}
       {formData?.photo ? (
         <Image
@@ -42,6 +42,7 @@ export default function FormProduct({
       <label className="form-input my-3">
         <input
           type={"file"}
+          id="photo"
           name="photo"
           accept="image/*"
           hidden
@@ -60,6 +61,7 @@ export default function FormProduct({
       {/* input name */}
       <input
         type="text"
+        id="name"
         placeholder="Write Product Name ..."
         className="form-input my-3"
         // required
@@ -71,6 +73,7 @@ export default function FormProduct({
 
       {/* input description */}
       <textarea
+        id="description"
         placeholder="Write Description ..."
         className="form-input my-3"
         // required
@@ -83,6 +86,7 @@ export default function FormProduct({
       {/* input price */}
       <input
         type="number"
+        id="price"
         placeholder="Enter Price"
         className="form-input my-3"
         min={0}
@@ -115,6 +119,7 @@ export default function FormProduct({
       {/* input quantity */}
       <input
         type="number"
+        id="quantity"
         placeholder="Enter quantity"
         className="form-input my-3"
         min={0}
