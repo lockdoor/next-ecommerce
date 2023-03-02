@@ -43,12 +43,14 @@ export default function CardAddress({ a, userId, setShowForm, setSelect }) {
       updateMainMutation.mutate({addressId: a._id, userId})
     }
   }
-  // console.log(a._id)
+
   return (
-    <div className="border border-green-400 rounded-md py-2 px-5 max-w-md mx-auto">
+    <div className="my-5 border border-green-400 rounded-md py-2 px-5 max-w-md mx-auto">
       <div>
-        <input type={"checkbox"} checked={a.isMain} disabled={a.isMain ? true : false} onChange={handleIsMainChange}/>
-        <label>Set to main</label>
+        <input 
+        className=" disabled:hidden mr-2"
+        type={"checkbox"} checked={a.isMain} disabled={a.isMain ? true : false} onChange={handleIsMainChange}/>
+        <label>{a.isMain ? 'Main Address' :'Set to main'}</label>
       </div>
       <div className="flex ">
         <div className="w-1/4">Name:</div>
@@ -91,14 +93,3 @@ export default function CardAddress({ a, userId, setShowForm, setSelect }) {
   );
 }
 
-// {
-//   name: 'พิษณุ นามนิล',
-//   province: 'กรุงเทพมหานคร',
-//   amphoe: 'คลองเตย',
-//   district: 'คลองเตย',
-//   etc: '100/822 ชุมชนพัฒนา 70 ไร่ ซอย 30',
-//   phone: '0909401271',
-//   zipcode: 10110,
-//   isMain: false,
-//   _id: new ObjectId("63fd5de212fae79532805d4b")
-// }

@@ -4,7 +4,6 @@ import { Types } from "mongoose";
 
 export const create = async (req, res) => {
   try {
-    // console.log(req.body)
     const {
       zipcode,
       province,
@@ -38,7 +37,6 @@ export const create = async (req, res) => {
     const user = await User.findByIdAndUpdate(userId, {
       $push: { addresses: address },
     });
-    // console.log(user)
     res.json(user);
   } catch (err) {
     console.log(err);
@@ -48,11 +46,9 @@ export const create = async (req, res) => {
 
 export const list = async (req, res) => {
   try {
-    // console.log(req.body)
     const { userId } = req.query;
     await connectDB();
     const list = await User.findById(userId).select("addresses");
-    // console.log(list)
     res.json(list);
   } catch (err) {
     console.log(err);
@@ -101,11 +97,9 @@ export const update = async (req, res) => {
 
 export const updateMain = async (req, res) => {
   try {
-    console.log(req.query);
     const { addressId, userId } = req.query;
     await connectDB();
-    const response = await User.bulkWrite([
-      
+    const response = await User.bulkWrite([     
       {
         updateOne: {
           filter: { _id: userId },
@@ -113,7 +107,6 @@ export const updateMain = async (req, res) => {
             $set: { 'addresses.$[address].isMain': false },
           },
           arrayFilters: [{"address.isMain": true}],
-          // upsert: true
         },
       },
       {
@@ -123,15 +116,11 @@ export const updateMain = async (req, res) => {
             $set: { 'addresses.$[address].isMain': true },
           },
           arrayFilters: [{"address._id": new Types.ObjectId(addressId) }],
-          // upsert: true
         },
       },
       
     ]);
-
-    // res.json(response);
-    console.log(response);
-    res.json({ status: "OK" });
+    res.json(response);
   } catch (err) {
     console.log(err);
     res.json({ error: "error by updateMain address" });

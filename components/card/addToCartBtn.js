@@ -23,9 +23,8 @@ export default function AddToCartBtn({ p }) {
   });
 
   const handleClick = () => {
-    // console.log("token is => ", data?.token);
     if (!data?.token) {
-      router.push("/auth/login");
+      router.push(`/auth/login?callbackUrl=/shop/product/${p.slug}`);
     } else {
       const payload = {
         productId: p._id,
@@ -34,6 +33,7 @@ export default function AddToCartBtn({ p }) {
       createMutation.mutate(payload);
     }
   };
+  
   return (
     <button
       onClick={handleClick}

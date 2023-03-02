@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { filterAddress } from "@/libs/clientRequest/address";
-
 import { useQueryClient, useMutation } from "react-query";
 import { create, list, update } from "@/libs/clientRequest/address";
 import { toast } from "react-hot-toast";
 
 export default function FormAddAddress({
   setShow,
-  userId,
-  address,
-  setAddress,
+  userId, //for create
+  address, //for update
+  setAddress, //for update
 }) {
+
+  // state
+  const [zipcode, setZipcode] = useState("");
+  const [etc, setEtc] = useState("100/822 ชุมชนพัฒนา 70 ไร่ ซอย 30");
+  const [data, setData] = useState("");
+  const [phone, setPhone] = useState("0909401271");
+  const [select, setSelect] = useState({});
+  const [name, setName] = useState("พิษณุ นามนิล");
+
   // hook
   const queryClient = useQueryClient();
   const createMutation = useMutation(create, {
@@ -20,6 +28,12 @@ export default function FormAddAddress({
       } else {
         queryClient.prefetchQuery(["list", userId], () => list(userId));
         toast.success("create address succesful");
+        
+        setZipcode('')
+        setEtc('')
+        setPhone('')
+        setName('')
+        setSelect({})
         setShow(false);
       }
     },
@@ -37,14 +51,7 @@ export default function FormAddAddress({
     },
   });
 
-  // state
-  const [zipcode, setZipcode] = useState("");
-  const [etc, setEtc] = useState("100/822 ชุมชนพัฒนา 70 ไร่ ซอย 30");
-  const [data, setData] = useState("");
-  const [phone, setPhone] = useState("0909401271");
-  const [select, setSelect] = useState(null);
-  const [name, setName] = useState("พิษณุ นามนิล");
-  // const [isMain, setIsMain] = useState(false);
+  
 
   // function
   const handleChangeZipcode = async (e) => {
@@ -82,7 +89,6 @@ export default function FormAddAddress({
       etc: etc,
       phone: phone,
       userId: userId,
-      isMain: isMain,
     };
     // console.log(payload)
     createMutation.mutate(payload);
@@ -106,6 +112,7 @@ export default function FormAddAddress({
   };
 
   const handleCancel = () => {
+    console.log("handleCancel work")
     setShow(false);
     address && setAddress(null);
   };
@@ -170,7 +177,7 @@ export default function FormAddAddress({
             // className="border border-green-300"
             disabled
             required
-            value={select?.province}
+            value={select?.province || ''}
             // onChange={(e) => setEtc(e.target.value)}
           />
         </div>
@@ -184,7 +191,7 @@ export default function FormAddAddress({
             // className="border border-green-300"
             required
             disabled
-            value={select?.amphoe}
+            value={select?.amphoe || ''}
             // onChange={(e) => setEtc(e.target.value)}
           />
         </div>
@@ -198,7 +205,7 @@ export default function FormAddAddress({
             // className="border border-green-300"
             required
             disabled
-            value={select?.district}
+            value={select?.district || ''}
             // onChange={(e) => setEtc(e.target.value)}
           />
         </div>
@@ -243,19 +250,6 @@ export default function FormAddAddress({
           />
         </div>
 
-        {/* set isMain */}
-        {/* <div className="my-3">
-          <label>
-            <input
-              type="checkbox"
-              checked={isMain}
-              disabled={address ? true : false}
-              onChange={()=>setIsMain(!isMain)}
-            />
-            <span className="ml-3">Set Main</span>
-          </label>
-        </div> */}
-
         {/* btn */}
         <div className="mt-10 flex justify-center gap-10">
           <button
@@ -264,7 +258,7 @@ export default function FormAddAddress({
           >
             Cancel
           </button>
-          <button className="btn-submit flex-1">
+          <button type="submit" className="btn-submit flex-1">
             {address ? "Update" : "Submit"}
           </button>
         </div>

@@ -5,8 +5,9 @@ import { getToken } from "next-auth/jwt";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { getSession } from "next-auth/react";
 
-export default function Login() {
+export default function Login({callbackUrl}) {
   // state
   const [email, setEmail] = useState("lockdoor@gmail.com");
   const [password, setPassword] = useState("12345678");
@@ -26,8 +27,16 @@ export default function Login() {
     if (response.error) {
       setErrorMessage(response.error);
     } else {
-      setErrorMessage("");
-      router.reload();
+      const {token} = await getSession()
+      if(!token){
+        setErrorMessage('token not found');
+      }
+      else {
+        setErrorMessage("");
+        callbackUrl 
+          ? router.push(callbackUrl) 
+          : router.push(`/dashboard/${token?.role === 1 ? 'admin' : 'user'}`) 
+      }
     }
   };
 
@@ -76,11 +85,13 @@ export default function Login() {
   );
 }
 
-export async function getServerSideProps({ req }) {
+export async function getServerSideProps(context) {
+  const {req} = context
   const token = await getToken({ req });
+  const {callbackUrl} = context.query 
   if (!token) {
     return {
-      props: {},
+      props: {callbackUrl: callbackUrl || null},
     };
   } else if (token?.role === 1) {
     return {

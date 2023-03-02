@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-hot-toast";
 import { AiOutlinePlusSquare, AiOutlineMinusSquare } from "react-icons/ai";
 
-export default function CardCart({ c, userId, setSelect }) {
+export default function CardCart({ c, userId, setSelect, order }) {
   const [checked, setChecked] = useState(false);
   const [amount, setAmount] = useState(c.amount);
   const queryClient = useQueryClient();
@@ -27,7 +27,7 @@ export default function CardCart({ c, userId, setSelect }) {
   };
 
   const handlePlus = () => {
-    if (!checked) return;
+    if (!checked || order) return;
     setAmount(amount + 1);
     setSelect(prev => {
       const arr = [...prev]
@@ -39,9 +39,9 @@ export default function CardCart({ c, userId, setSelect }) {
   };
 
   const handleMinus = () => {
-    if (!checked) return;
+    if (!checked || order || amount ===1) return;
     // if(amount === 1){
-
+    //   return
     // }
     setAmount(amount - 1);
     setSelect(prev => {
@@ -82,6 +82,7 @@ export default function CardCart({ c, userId, setSelect }) {
               <input
                 type="checkbox"
                 className="mr-3 w-5 aspect-square accent-blue-500 "
+                disabled={order}
                 checked={checked}
                 onChange={handleCheckboxChange}
               />

@@ -28,14 +28,18 @@ export default function UserMenu({ page }) {
           <li>Setting Address</li>
         </Link>
 
-        {/* <Link
-          href={"/dashboard/admin/products"}
+        <Link
+          href={"/dashboard/user/order"}
           className={`${
-            page === "products" ? "admin-menu-item-active" : "admin-menu-item "
+            page === "order"
+              ? "admin-menu-item-active"
+              : "admin-menu-item "
           }`}
         >
-          <li>Products</li>
-        </Link> */}
+          <li>Order</li>
+        </Link>
+
+        
       </ul>
     </div>
   );
