@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import moment from "moment";
 import { listByUserId, removeProductInCart } from "@/libs/clientRequest/cart";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-hot-toast";
 import { AiOutlinePlusSquare, AiOutlineMinusSquare } from "react-icons/ai";
+import { Badge } from "antd";
+import Link from "next/link";
 
 export default function CardCart({ c, userId, setSelect, order }) {
   const [checked, setChecked] = useState(false);
@@ -29,27 +31,26 @@ export default function CardCart({ c, userId, setSelect, order }) {
   const handlePlus = () => {
     if (!checked || order) return;
     setAmount(amount + 1);
-    setSelect(prev => {
-      const arr = [...prev]
-      const index = arr.findIndex((p) => p._id === c._id)
-      arr[index].amount = amount + 1
-      return arr
-    })
-    
+    setSelect((prev) => {
+      const arr = [...prev];
+      const index = arr.findIndex((p) => p._id === c._id);
+      arr[index].amount = amount + 1;
+      return arr;
+    });
   };
 
   const handleMinus = () => {
-    if (!checked || order || amount ===1) return;
+    if (!checked || order || amount === 1) return;
     // if(amount === 1){
     //   return
     // }
     setAmount(amount - 1);
-    setSelect(prev => {
-      const arr = [...prev]
-      const index = arr.findIndex((p) => p._id === c._id)
-      arr[index].amount = amount - 1
-      return arr
-    })
+    setSelect((prev) => {
+      const arr = [...prev];
+      const index = arr.findIndex((p) => p._id === c._id);
+      arr[index].amount = amount - 1;
+      return arr;
+    });
   };
 
   const handleCheckboxChange = (e) => {
@@ -61,96 +62,98 @@ export default function CardCart({ c, userId, setSelect, order }) {
   };
 
   return (
-    <div
-      className={`border ${
-        checked ? "border-2 border-blue-500" : "border-slate-200"
-      } my-3 rounded-md shadow-md p-3`}
+    <Badge.Ribbon
+      text={
+        c.product.quantity > 0
+          ? `In stock ${c.product.quantity}`
+          : "Out of stock"
+      }
+      placement="start"
     >
-      <div className="flex">
-        <div className="w-1/3 flex justify-center items-center">
-          <Image
-            // className="blo"
-            src={`/api/product/photo/${c.product._id}`}
-            width={200}
-            height={200}
-            alt={c.product.name}
-          />
-        </div>
-        <div className="w-2/3">
-          <h5 className="text-2xl font-bold">
-            <label>
-              <input
-                type="checkbox"
-                className="mr-3 w-5 aspect-square accent-blue-500 "
-                disabled={order}
-                checked={checked}
-                onChange={handleCheckboxChange}
-              />
-              {c.product.name}
-            </label>
-          </h5>
-          <p className="line-clamp-2 text-sm">{c.product.description}</p>
-          <p className="text-red-400 text-xl">
-            <span>Price:</span>
-            <span className="ml-3">
-              {c.product.price.toLocaleString("th-TH", {
-                style: "currency",
-                currency: "THB",
-                minimumFractionDigits: 0,
-              })}
-            </span>
-          </p>
-          <div className="flex items-center my-2">
-            <span className="md:mr-5 ">amount:</span>
-            <div className="flex items-center bg-gray-100 p-1 rounded-md">
-              <AiOutlineMinusSquare
-                size={30}
-                className={
-                  checked ? "cursor-pointer text-blue-500" : "text-gray-200"
-                }
-                onClick={handleMinus}
-              />
-              <span
-                className={`mx-5 text-3xl bg-white px-5 rounded-md ${
-                  checked ? "text-black" : "text-gray-200"
-                }`}
-              >
-                {amount}
+      <div
+        className={`border ${
+          checked ? "border-2 border-blue-500" : "border-slate-200"
+        } my-3 rounded-md shadow-md p-3`}
+      >
+        <div className="flex">
+          <div className="w-1/3 flex justify-center items-center">
+            <Image
+              src={`/api/product/photo/${c.product._id}`}
+              width={200}
+              height={200}
+              alt={c.product.name}
+            />
+          </div>
+          <div className="w-2/3">
+            <div className="flex justify-between">
+            <h5 className="text-2xl font-bold">
+              <label>
+                <input
+                  type="checkbox"
+                  className="mr-3 w-5 aspect-square accent-blue-500 "
+                  disabled={order}
+                  checked={checked}
+                  onChange={handleCheckboxChange}
+                />
+                {c.product.name}
+              </label>
+            </h5>
+            <Link href={`/shop/product/${c.product.slug}`}>View</Link>
+            </div>
+            
+            <p className="line-clamp-2 text-sm">{c.product.description}</p>
+            <p className="text-red-400 text-xl">
+              <span>Price:</span>
+              <span className="ml-3">
+                {c.product.price.toLocaleString("th-TH", {
+                  style: "currency",
+                  currency: "THB",
+                  minimumFractionDigits: 0,
+                })}
               </span>
-              <AiOutlinePlusSquare
-                size={30}
-                className={
-                  checked ? "cursor-pointer text-blue-500" : "text-gray-200"
-                }
-                onClick={handlePlus}
-              />
+            </p>
+            <div className="flex items-center my-2">
+              <span className="md:mr-5 ">amount:</span>
+              <div className="flex items-center bg-gray-100 p-1 rounded-md">
+                <AiOutlineMinusSquare
+                  size={30}
+                  className={
+                    checked ? "cursor-pointer text-blue-500" : "text-gray-200"
+                  }
+                  onClick={handleMinus}
+                />
+                <span
+                  className={`mx-5 text-3xl bg-white px-5 rounded-md ${
+                    checked ? "text-black" : "text-gray-200"
+                  }`}
+                >
+                  {amount}
+                </span>
+                <AiOutlinePlusSquare
+                  size={30}
+                  className={
+                    checked ? "cursor-pointer text-blue-500" : "text-gray-200"
+                  }
+                  onClick={handlePlus}
+                />
+              </div>
             </div>
           </div>
-          {/* <p className="text-blue-500 text-xl">
-            <span>Total Price:</span>
-            <span className="ml-3">
-              {(c.product.price * amount).toLocaleString("th-TH", {
-                style: "currency",
-                currency: "THB",
-                minimumFractionDigits: 0,
-              })}
-            </span>
-          </p> */}
+        </div>
+        <div className="flex">
+          <div className="w-1/3 text-center">
+            <small>In Cart {moment(c.createdAt).fromNow()}</small>
+          </div>
+          <div className="w-2/3">
+            <p
+              className=" text-right text-red-500 cursor-pointer"
+              onClick={() => handleRemove(c._id)}
+            >
+              Remove
+            </p>
+          </div>
         </div>
       </div>
-      <div className="flex">
-        <div className="w-1/3 text-center">
-          <small>In Cart {moment(c.createdAt).fromNow()}</small>
-        </div>
-        <div className="w-2/3">
-          <p
-            className=" text-right text-red-500 cursor-pointer"
-            onClick={() => handleRemove(c._id)}
-          >
-            Remove
-          </p>
-        </div>
-      </div>
-    </div>
+    </Badge.Ribbon>
   );
 }

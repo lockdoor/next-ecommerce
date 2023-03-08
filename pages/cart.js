@@ -1,17 +1,21 @@
 import React, { useState } from "react";
+// next
 import { getToken } from "next-auth/jwt";
+import Link from "next/link";
+// component
 import Jumbotron from "@/components/card/jumbotron";
 import LayoutMain from "@/components/layout/layoutMain";
-import { listByUserId } from "@/libs/clientRequest/cart";
-import { useQuery } from "react-query";
 import CardCart from "@/components/card/cardCart";
-import Link from "next/link";
-import { list as listAddress } from "@/libs/clientRequest/address";
-import { toast } from "react-hot-toast";
-import { Modal } from "antd";
 import FormAddAddress from "@/components/form/formAddAddress";
 import CardAddressCart from "@/components/card/cardAddressCart";
-// import { useRouter } from "next/router";
+import Payment from "@/components/cart/payment";
+// client request
+import { list as listAddress } from "@/libs/clientRequest/address";
+import { listByUserId } from "@/libs/clientRequest/cart";
+import { useQuery } from "react-query";
+// util
+import { toast } from "react-hot-toast";
+import { Modal } from "antd";
 
 export default function CartOfUser({ userId, name }) {
   //state
@@ -23,7 +27,6 @@ export default function CartOfUser({ userId, name }) {
   const [address, setAddress] = useState({});
 
   //hook
-  // const router = useRouter()
   const { data: products } = useQuery(["listByUserId", userId], () =>
     listByUserId(userId)
   );
@@ -110,7 +113,8 @@ export default function CartOfUser({ userId, name }) {
               )}
             </div>
             <hr className="border border-slate-200 my-5" />
-            {/* address */}
+
+            {/* show address and payment if user make order */}
             {order && (
               <div className="">
                 <div className="text-2xl text-center font-bold">
@@ -136,8 +140,9 @@ export default function CartOfUser({ userId, name }) {
                   </button>
                 )}
                 <hr className="border border-slate-200 my-5" />
+
                 {/* Payment */}
-                <div className="text-2xl text-center font-bold">Your Payment</div>
+                <Payment cart={select} setCart={setSelect} userId={userId}/>
               </div>
             )}
           </div>
@@ -214,8 +219,8 @@ export async function getServerSideProps(context) {
   } else {
     return {
       props: {
-        userId: token._id,
-        name: token.name,
+        userId: token?._id,
+        name: token?.name,
       },
     };
   }

@@ -28,7 +28,9 @@ export async function listByUserId(req, res){
         path: 'product', 
         populate: {path: 'category'},
         select: "-photo"
-      }).select('-user')
+      })
+      .select('-user')
+    // console.log(cartList)
     res.json(cartList)
   }
   catch(err){
@@ -52,3 +54,4 @@ export async function removeProductInCart(req, res){
     console.log(err)
   }
 }
+

@@ -4,7 +4,7 @@ import isLogin from "@/middleware/isLogin";
 export default function handler(req, res) {
   switch (req.method) {
     case "POST":
-      create(req, res);
+      isLogin(create)(req, res);
       break;
     case "DELETE":
       isLogin(removeProductInCart)(req, res);
