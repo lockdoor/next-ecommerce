@@ -25,6 +25,7 @@ export default function CartOfUser({ userId, name }) {
   const [isModalChangeAddressOpen, setIsModalChangeAddressOpen] =
     useState(false);
   const [address, setAddress] = useState({});
+  const [loading, setLoading] = useState(false)
 
   //hook
   const { data: products } = useQuery(["listByUserId", userId], () =>
@@ -52,7 +53,7 @@ export default function CartOfUser({ userId, name }) {
   };
 
   return (
-    <LayoutMain>
+    <LayoutMain loading={loading}>
       <Jumbotron
         title={`Cart of ${name}`}
         subTitle={`${products?.length} Products in Cart`}
@@ -142,7 +143,7 @@ export default function CartOfUser({ userId, name }) {
                 <hr className="border border-slate-200 my-5" />
 
                 {/* Payment */}
-                <Payment cart={select} setCart={setSelect} userId={userId}/>
+              {address && <Payment loading={loading} setLoading={setLoading} cart={select} setCart={setSelect} userId={userId} addressId={address._id} />}
               </div>
             )}
           </div>
@@ -185,7 +186,10 @@ export default function CartOfUser({ userId, name }) {
                   setIsModalChangeAddressOpen(false);
                 }}
               />
-              <label htmlFor={a._id} className="flex gap-2 flex-wrap cursor-pointer">
+              <label
+                htmlFor={a._id}
+                className="flex gap-2 flex-wrap cursor-pointer"
+              >
                 <CardAddressCart address={a} />
               </label>
             </div>

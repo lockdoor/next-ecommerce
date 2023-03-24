@@ -10,7 +10,7 @@ import { useQueryClient, useMutation } from "react-query";
 import DropIn from "braintree-web-drop-in-react";
 import { toast } from "react-hot-toast";
 
-export default function Payment({ cart, setCart, userId }) {
+export default function Payment({ cart, setCart, userId, addressId, setLoading, loading }) {
   // state
   const [instance, setInstance] = useState("");
 
@@ -27,6 +27,7 @@ export default function Payment({ cart, setCart, userId }) {
           listByUserId(userId)
         );
         setCart([]);
+        setLoading(false)
         router.push("/dashboard/user/order");
         toast.success("create order success");
       }
@@ -37,15 +38,16 @@ export default function Payment({ cart, setCart, userId }) {
   const handleBuy = async () => {
     try {
       const { nonce } = await instance.requestPaymentMethod();
-      const payload = {nonce, cart, userId}
-      // const payload = {cart, userId}
+      const payload = {nonce, cart, userId, addressId}
+      // const payload = {cart, userId, addressId}
+      setLoading(true)
       makeOrderMutation.mutate(payload)
     } catch (err) {
       console.log(err);
     }
   };
 
-  // console.log(cart);
+  // console.log(addressId);
   return (
     <>
       <div className="text-2xl text-center font-bold">Your Payment</div>
@@ -64,7 +66,7 @@ export default function Payment({ cart, setCart, userId }) {
                 onClick={handleBuy}
                 className="block w-full btn-submit px-10"
               >
-                Buy
+                {loading ? 'Processing' : 'Buy'}
               </button>
             )}
           </>

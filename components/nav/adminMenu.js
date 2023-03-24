@@ -36,6 +36,16 @@ export default function AdminMenu({ page }) {
         >
           <li>Products</li>
         </Link>
+
+        <Link
+          href={"/dashboard/admin/manageOrders"}
+          className={`${
+            page === "orders" ? "admin-menu-item-active" : "admin-menu-item "
+          }`}
+        >
+          <li>Manage Orders</li>
+        </Link>
+
       </ul>
     </div>
   );

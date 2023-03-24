@@ -46,7 +46,7 @@ export default function Home() {
 
 
   return (
-    <LayoutMain page={"home"}>
+    <LayoutMain page={"home"} loading={isLoading}>
       <Jumbotron title={"HOME PAGE"} subTitle={"Wellcome to my shop"} />
       <div className="sm:flex">
         <div className="sm:w-1/2 pl-2 pr-2">

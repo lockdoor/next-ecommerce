@@ -2,7 +2,7 @@ import { Schema, model, models, Types } from "mongoose";
 
 const orderSchema = new Schema(
   {
-    user: { type: Types.ObjectId, ref: "User", required: true },
+    buyer: { type: Types.ObjectId, ref: "User", required: true },
     products: [
       {
         product: { type: Types.ObjectId, ref: "Product", required: true },
@@ -10,6 +10,7 @@ const orderSchema = new Schema(
       },
     ],
     payment: {},
+    address: { type: Types.ObjectId, required: true },
     status: {
       type: String,
       default: "Not processed",

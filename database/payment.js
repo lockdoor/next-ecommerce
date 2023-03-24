@@ -28,7 +28,7 @@ export const getToken = async (req, res) => {
 export const processPayment = async (req, res) => {
   try {
     // console.log(req.body);
-    const { nonce, cart, userId } = req.body.payload;
+    const { nonce, cart, userId, addressId } = req.body.payload;
     const amount = cart.reduce((a, b) => a + b.amount * b.product.price, 0);
     // console.log(amount);
 
@@ -74,7 +74,7 @@ export const processPayment = async (req, res) => {
       product: c.product,
       amount: c.amount,
     }));
-    await Order.create({ user: userId, products, payment: result });
+    await Order.create({ buyer: userId, products, payment: result, address: addressId });
 
     res.json({ ok: true });
   } catch (err) {

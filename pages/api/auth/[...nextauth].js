@@ -38,19 +38,24 @@ export const authOptions = {
       name: "Credentials",
       async authorize(credentials, req) {
         const { email, password } = credentials;
+        try{
+          await connectDB();
+          const user = await User.findOne({ email });
 
-        await connectDB();
-        const user = await User.findOne({ email });
+          if (!user) throw new Error("user not found");
 
-        if (!user) throw new Error("user not found");
+          const passwordMatch = await bcrypt.compare(password, user.password);
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
+          if (!passwordMatch) throw new Error("password wrong");
 
-        if (!passwordMatch) throw new Error("password wrong");
-
-        const doc = user._doc;
-        delete doc.password;
-        return doc
+          const doc = user._doc;
+          delete doc.password;
+          return doc
+        }
+        catch(err){
+          console.log(error)
+          return null
+        }
       },
     }),
   ],

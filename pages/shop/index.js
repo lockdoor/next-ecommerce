@@ -14,7 +14,7 @@ export default function Shop() {
 
   //hook
   const { data: categories } = useQuery("categoriesList", categoriesList);
-  const { data: products } = useQuery(
+  const { data: products , isLoading } = useQuery(
     ["productsList", filterCategory, filterPrice.min, filterPrice.max],
     () => productsList(filterCategory, filterPrice.min, filterPrice.max)
   );
@@ -31,7 +31,7 @@ export default function Shop() {
   };
 
   return (
-    <LayoutMain page={"shop"}>
+    <LayoutMain page={"shop"} loading={isLoading}>
       <Jumbotron />
       <div className="">
         <div className="md:flex">

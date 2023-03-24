@@ -15,7 +15,7 @@ export default function CategoryAll() {
       </div>
     );
   return (
-    <LayoutMain page="category">
+    <LayoutMain page="category" loading={isLoading}>
       <Jumbotron title="Category" subTitle="Please choose Category" />
       <div className="px-3 mt-3 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {data?.map((c) => (
