@@ -79,6 +79,12 @@ export default function Login({callbackUrl}) {
               Register
             </Link>
           </p>
+          <p className="text-center">
+            If you forget password please{" "}
+            <Link href={"/auth/recovery"} className="text-blue-400">
+              Recovery
+            </Link>
+          </p>
         </div>
       </main>
     </LayoutMain>
