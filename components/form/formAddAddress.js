@@ -13,11 +13,11 @@ export default function FormAddAddress({
 
   // state
   const [zipcode, setZipcode] = useState("");
-  const [etc, setEtc] = useState("100/822 ชุมชนพัฒนา 70 ไร่ ซอย 30");
+  const [etc, setEtc] = useState("");
   const [data, setData] = useState("");
-  const [phone, setPhone] = useState("0909401271");
+  const [phone, setPhone] = useState("");
   const [select, setSelect] = useState({});
-  const [name, setName] = useState("พิษณุ นามนิล");
+  const [name, setName] = useState("");
 
   // hook
   const queryClient = useQueryClient();
