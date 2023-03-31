@@ -9,8 +9,8 @@ import { getSession } from "next-auth/react";
 
 export default function Login({callbackUrl}) {
   // state
-  const [email, setEmail] = useState("lockdoor@gmail.com");
-  const [password, setPassword] = useState("12345678");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   // hook
