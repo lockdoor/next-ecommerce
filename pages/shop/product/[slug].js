@@ -103,7 +103,7 @@ export default function ProductView(props) {
             <div className="m-2">{product.description}</div>
 
             <div className="rounded-b-md overflow-hidden">
-              <AddToCartBtn p={product}/>
+              <AddToCartBtn p={product} />
             </div>
           </div>
         </div>
@@ -138,19 +138,61 @@ export async function getServerSideProps(context) {
   const slug = context.params.slug;
   try {
     await connectDB();
-    const product = await Product.findOne({ slug })
-      .populate({ path: "category" })
-      .select("-photo");
-    const relate = await Product.find({
-      category: product.category,
-      slug: { $ne: slug },
-    })
-      .select("-photo")
-      .populate("category")
-      .limit(4);
+    // const product = await Product.findOne({ slug })
+    //   .populate({ path: "category" })
+    //   .select("-photo");
+
+    const product = await Product.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      { $addFields: { category: { $first: "$category" } } },
+      { $match: { slug } },
+      { $limit: 1},
+      { $project: { photo: 0 } },
+    ]);
+
+    // console.log(product[0])
+    // const relate = await Product.find({
+    //   category: product.category,
+    //   slug: { $ne: slug },
+    // })
+    //   .select("-photo")
+    //   .populate("category")
+    //   .limit(4);
+    const relate = await Product.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "_category",
+        },
+      },
+
+      {
+        $match: {
+          $expr: {
+            $and: [
+              { $ne: ["$slug", slug] },
+              { $eq: ['$category', {$toObjectId: product[0].category._id} ] },
+            ],
+          },
+        },
+      },
+      {$addFields: {category: {$first: '$_category'}}},
+      {$limit: 4},
+      { $project: { photo: 0 } },
+    ]);
+    // console.log('relate is =>', relate);
     return {
       props: {
-        product: JSON.stringify(product),
+        product: JSON.stringify(product[0]),
         relate: JSON.stringify(relate),
       },
     };
